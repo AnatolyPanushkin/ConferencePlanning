@@ -1,21 +1,24 @@
 ﻿using ConferencePlanning.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace ConferencePlanning.Data;
 
-public class ConferencePlanningContext:DbContext
+public class ConferencePlanningContext:IdentityDbContext<User>
 {
-    public ConferencePlanningContext(DbContextOptions<ConferencePlanningContext> options):base(options)
+    private readonly IConfiguration _configuration;
+    public ConferencePlanningContext(DbContextOptions<ConferencePlanningContext> options,IConfiguration configuration):base(options)
     {
-        
+        _configuration = configuration;
     }
     
     public DbSet<Conference> Conferences { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(
-            "Server=localhost;Port=5432;Database=ConferencePlanning;Username=postgres;Password=1234");
+        optionsBuilder.UseNpgsql(_configuration.GetConnectionString("ConferencePlanningContext"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +26,7 @@ public class ConferencePlanningContext:DbContext
         modelBuilder.HasPostgresExtension("adminpack")
             .HasAnnotation("Relational:Collation", "Russian_Russia.1251");
 
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Conference>(entity => { entity.HasKey(conference => new {conference.Id}); });
     }
 }

@@ -1,5 +1,6 @@
 using ConferencePlanning.Data;
 using ConferencePlanning.Data.Entities;
+using ConferencePlanning.IdentityServices;
 using ConferencePlanning.Services.ConferenceServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,8 @@ builder.Services.AddCors(opt =>
 });
 
 builder.Services.AddScoped<IConferenceService, ConferenceService>();
+
+builder.Services.AddIdentityService(builder.Configuration);
 
 var app = builder.Build();
 
