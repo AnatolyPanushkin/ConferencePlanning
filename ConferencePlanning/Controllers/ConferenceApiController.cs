@@ -1,9 +1,9 @@
 ﻿using ConferencePlanning.Data.Entities;
 using ConferencePlanning.Services.ConferenceServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConferencePlanning.Controllers;
-
 
 [Route("api/conferences")]
 [ApiController]

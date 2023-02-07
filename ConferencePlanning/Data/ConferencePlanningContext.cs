@@ -28,6 +28,7 @@ public class ConferencePlanningContext:IdentityDbContext<User>
 
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Conference>(entity => { entity.HasKey(conference => new {conference.Id}); });
+        modelBuilder.Entity<IdentityUserRole<Guid>>().HasKey(p => new { p.UserId, p.RoleId });
     }
 }
 

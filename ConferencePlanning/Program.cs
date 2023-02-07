@@ -37,13 +37,14 @@ builder.Services.AddScoped<IConferenceService, ConferenceService>();
 
 builder.Services.AddIdentityService(builder.Configuration);
 
+
 var app = builder.Build();
 
 //add new users into db
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 var userManager = services.GetRequiredService<UserManager<User>>();
-await Seed.SeedData(userManager);
+await Seed.SeedData(userManager,services);
 //------------------------------//
 
 
