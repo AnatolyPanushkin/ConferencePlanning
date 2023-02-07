@@ -1,6 +1,9 @@
-﻿using ConferencePlanning.Data;
+﻿using System.Text;
+using ConferencePlanning.Data;
 using ConferencePlanning.Data.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ConferencePlanning.IdentityServices;
 
@@ -15,7 +18,19 @@ public static class IdentityServiceExtension
             .AddEntityFrameworkStores<ConferencePlanningContext>()
             .AddSignInManager<SignInManager<User>>();
         
-        services.AddAuthentication();
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["IdentityKey"]));
+        
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        } );
+        services.AddScoped<TokenService>();
 
         return services;
     }
