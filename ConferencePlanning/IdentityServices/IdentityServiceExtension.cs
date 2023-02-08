@@ -11,10 +11,20 @@ public static class IdentityServiceExtension
 {
     public static IServiceCollection AddIdentityService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddIdentityCore<User>(options =>
+        services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
             })
+            .AddEntityFrameworkStores<ConferencePlanningContext>()
+            .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
+        
+        return services;
+        /*services.AddIdentityCore<User>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddRoles<IdentityRole>()
+            .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider)
             .AddEntityFrameworkStores<ConferencePlanningContext>()
             .AddSignInManager<SignInManager<User>>();
         
@@ -30,8 +40,7 @@ public static class IdentityServiceExtension
                 ValidateAudience = false
             };
         } );
-        services.AddScoped<TokenService>();
-
-        return services;
+        services.AddScoped<TokenService>();*/
+        
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using ConferencePlanning.Data;
 using ConferencePlanning.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ConferencePlanning.IdentityServices;
@@ -10,6 +12,7 @@ public class TokenService
 {
     private readonly IConfiguration _configuration;
 
+    private readonly ConferencePlanningContext _context;
     public TokenService(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -35,7 +38,7 @@ public class TokenService
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
-
+        
         return tokenHandler.WriteToken(token);
     }
 }

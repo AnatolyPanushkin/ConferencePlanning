@@ -18,6 +18,7 @@ public class ConferenceApiController:ControllerBase
     }
     
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult GetConferences()
     {
         return Ok(_service.GetAllConferences());

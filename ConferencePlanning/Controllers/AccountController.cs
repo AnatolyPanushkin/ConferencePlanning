@@ -17,16 +17,17 @@ public class AccountController:ControllerBase
     private readonly SignInManager<User> _signInManager;
     private readonly TokenService _tokenService;
 
-    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager,TokenService tokenService)
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _tokenService = tokenService;
+        //_tokenService = tokenService;
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
+        
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
         if (user == null)
@@ -36,16 +37,24 @@ public class AccountController:ControllerBase
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
+        //var token = _tokenService.CreateToken(user);
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        
+        await _userManager.ConfirmEmailAsync(user, token);
+        await _signInManager.SignInAsync(user,isPersistent:false);
+        
+        
         if (result.Succeeded)
         {
             return new UserDto
             {
                 DisplayName = user.DisplayName,
-                Token = _tokenService.CreateToken(user),
+                Token = token,
                 UserName = user.UserName
             };
         }
-
+        
+        
         return Unauthorized();
     }
 

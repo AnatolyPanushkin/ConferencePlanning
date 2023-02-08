@@ -21,15 +21,15 @@ public class Seed
                await userManager.CreateAsync(user, "Pa$$w0rd");
             }
         }
-        
-        /*var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+        var appUserManager = serviceProvider.GetService<UserManager<User>>();
+        var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
 
         if (roleManager != null && !roleManager.RoleExistsAsync("Admin").Result)
         {
             roleManager.CreateAsync(new IdentityRole { Name = "Admin" }).Wait();
         }
                 
-        if (userManager.FindByEmailAsync("admin@example.com").Result == null)
+        if (appUserManager.FindByEmailAsync("admin@example.com").Result == null)
         {
             var user = new User
             {
@@ -39,12 +39,12 @@ public class Seed
                 Bio = "admin"
             };
 
-            IdentityResult result = userManager.CreateAsync(user, "P@ssw0rd").Result;
+            IdentityResult result = appUserManager.CreateAsync(user, "P@ssw0rd").Result;
  
             if (result.Succeeded)
             {
-                userManager.AddToRoleAsync(user, "Admin").Wait();
+                appUserManager.AddToRoleAsync(user, "Admin").Wait();
             }
-        }*/
+        }
     }
 }
